@@ -34,8 +34,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'CoxExampleX.dat', dtype = scipy.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'CoxExampleY.dat', dtype = scipy.float64, delimiter = ',')
+x = scipy.loadtxt(baseDataDir + 'CoxExampleX.dat', dtype = np.float64, delimiter = ',')
+y = scipy.loadtxt(baseDataDir + 'CoxExampleY.dat', dtype = np.float64, delimiter = ',')
 
 print(y[0:5, :])
 
@@ -44,5 +44,5 @@ fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'cox')
 
 glmnetPlot.glmnetPlot(fit)
 
-c = glmnetCoef.glmnetCoef(fit, s = scipy.float64([0.05]))
+c = glmnetCoef.glmnetCoef(fit, s = np.float64([0.05]))
 print(c)

@@ -35,8 +35,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'MultinomialExampleX.dat', dtype = scipy.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'MultinomialExampleY.dat', dtype = scipy.float64, delimiter = ',')
+x = scipy.loadtxt(baseDataDir + 'MultinomialExampleX.dat', dtype = np.float64, delimiter = ',')
+y = scipy.loadtxt(baseDataDir + 'MultinomialExampleY.dat', dtype = np.float64, delimiter = ',')
 
 # call glmnet
 fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'multinomial', mtype = 'grouped')

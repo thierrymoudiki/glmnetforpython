@@ -35,8 +35,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'MultiGaussianExampleX.dat', dtype = scipy.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'MultiGaussianExampleY.dat', dtype = scipy.float64, delimiter = ',')
+x = scipy.loadtxt(baseDataDir + 'MultiGaussianExampleX.dat', dtype = np.float64, delimiter = ',')
+y = scipy.loadtxt(baseDataDir + 'MultiGaussianExampleY.dat', dtype = np.float64, delimiter = ',')
 
 # call glmnet
 mfit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'mgaussian')
@@ -44,7 +44,7 @@ mfit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'mgaussian')
 plt.figure()
 glmnetPlot(mfit, xvar = 'lambda', label = True, ptype = '2norm')
 
-f = glmnetPredict.glmnetPredict(mfit, x[0:5,:], s = scipy.float64([0.1, 0.01]))
+f = glmnetPredict.glmnetPredict(mfit, x[0:5,:], s = np.float64([0.1, 0.01]))
 print(f[:,:,0])
 print(f[:,:,1])
 

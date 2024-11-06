@@ -2,20 +2,21 @@ import os, sys
 from setuptools import setup, find_packages
 # from numpy.distutils.core import setup, Extension
 
-cmd = 'gfortran ./glmnet_python/GLMnet.f -fPIC -fdefault-real-8 -shared -o ./glmnet_python/GLMnet.so'
+cmd = 'gfortran ./glmnetforpython/GLMnet.f -fPIC -fdefault-real-8 -shared -o ./glmnetforpython/GLMnet.so'
 os.system(cmd)
 
-setup(name='glmnet_python',
-      version = '0.2.0',
-      description = 'Python version of glmnet, from Stanford University',
+setup(name='glmnetforpython',
+      version = '0.3.0',
+      description = 'Python version of glmnet, adapted from Stanford University',
       long_description=open('README.md').read(),
-      url="https://github.com/bbalasub1/glmnet_python",
-      author = 'Trevor Hastie, Balakumar B.J.',
-      author_email = 'bbalasub@gmail.com',
+      url="https://github.com/thierrymoudiki/glmnetforpython",
+      author = 'T. Moudiki',
+      author_email = 'thierry.moudiki@gmail.com',
       license = 'GPL-2',
-      packages=['glmnet_python'],
+      packages=['glmnetforpython'],
       install_requires=['joblib>=0.10.3'],
-      package_data={'glmnet_python': ['*.so', 'glmnet_python/*.so']},
+      package_data={'glmnetforpython': ['*.so', 'glmnetforpython/*.so']},
+      dependencies = ['numpy', 'pandas', 'scipy', 'scikit-learn'],
       classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',

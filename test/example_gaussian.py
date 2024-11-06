@@ -34,11 +34,11 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = scipy.float64)
-y = scipy.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = scipy.float64)
+x = scipy.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = np.float64)
+y = scipy.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
 
 # create weights
-t = scipy.ones((50, 1), dtype = scipy.float64)
+t = np.ones((50, 1), dtype = np.float64)
 wts = scipy.row_stack((t, 2*t))
 
 # call glmnet
@@ -53,11 +53,11 @@ glmnetPlot.glmnetPlot(fit, xvar = 'dev', label = True)
 #
 any(fit['lambdau'] == 0.5)
 #
-coefApprx = glmnetCoef.glmnetCoef(fit, s = scipy.float64([0.5]), exact = False)
+coefApprx = glmnetCoef.glmnetCoef(fit, s = np.float64([0.5]), exact = False)
 print(coefApprx)
 #
 fc = glmnetPredict.glmnetPredict(fit, x[0:5,:], ptype = 'response', \
-                                s = scipy.float64([0.05]))
+                                s = np.float64([0.05]))
 print(fc)
 #
 cvfit = cvglmnet.cvglmnet(x = x.copy(), y = y.copy(), ptype = 'mse', nfolds = 20) 
@@ -94,13 +94,13 @@ plt.legend( ('alpha = 1', 'alpha = 0.5', 'alpha = 0'), loc = 'upper left', prop=
 
 #%%
 plt.figure()
-cl = scipy.array([[-0.7], [0.5]], dtype = scipy.float64)
+cl = np.asarray([[-0.7], [0.5]], dtype = np.float64)
 tfit=glmnet.glmnet(x = x.copy(),y= y.copy(), cl = cl)
 glmnetPlot.glmnetPlot(tfit)
 
 #%%
 plt.figure()
-pfac = scipy.ones([1, 20])
+pfac = np.ones([1, 20])
 pfac[0, 4] = 0; pfac[0, 9] = 0; pfac[0, 14] = 0
 pfit = glmnet.glmnet(x = x.copy(), y = y.copy(), penalty_factor = pfac)
 glmnetPlot.glmnetPlot(pfit, label = True)
