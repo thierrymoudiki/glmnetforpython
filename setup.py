@@ -1,6 +1,13 @@
 import os, sys
 from setuptools import setup, find_packages
+from os import path
 # from numpy.distutils.core import setup, Extension
+
+# get the dependencies and installs
+here = path.abspath(path.dirname(__file__))
+
+with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+    all_reqs = f.read().split('\n')
 
 cmd = 'gfortran ./glmnetforpython/GLMnet.f -fPIC -fdefault-real-8 -shared -o ./glmnetforpython/GLMnet.so'
 os.system(cmd)
@@ -14,9 +21,8 @@ setup(name='glmnetforpython',
       author_email = 'thierry.moudiki@gmail.com',
       license = 'GPL-2',
       packages=['glmnetforpython'],
-      install_requires=['joblib>=0.10.3'],
       package_data={'glmnetforpython': ['*.so', 'glmnetforpython/*.so']},
-      dependencies = ['numpy', 'pandas', 'scipy', 'scikit-learn'],
+      install_requires=all_reqs,
       classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
