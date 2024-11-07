@@ -14,8 +14,8 @@ os.system(cmd)
 
 setup(name='glmnetforpython',
       version = '0.3.0',
-      description = 'Python version of glmnet, adapted from Stanford University',
-      long_description=open('README.md').read(),
+      description = 'Python version of glmnet, adapted from Stanford University (scikit-learn style)',
+      long_description="T. Moudik's Python version of glmnet (scikit-learn style)",
       url="https://github.com/thierrymoudiki/glmnetforpython",
       author = 'T. Moudiki',
       author_email = 'thierry.moudiki@gmail.com',
