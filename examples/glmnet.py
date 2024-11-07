@@ -1,22 +1,31 @@
 import os
 import sys
 import glmnetforpython as glmnetpy
-from sklearn.datasets import load_diabetes
+from sklearn.datasets import load_diabetes, fetch_california_housing
 from sklearn.model_selection import train_test_split
+from time import time
 
 
-X, y = load_diabetes(return_X_y=True)
+datasets = [load_diabetes, fetch_california_housing]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+for dataset in datasets:
 
-regr = glmnetpy.GLMNet()
+    print(f"dataset: {dataset.__name__}")
 
-print(regr.get_params())
+    X, y = dataset(return_X_y=True)
 
-regr.fit(X_train, y_train)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-print(regr.get_coef())
+    regr = glmnetpy.GLMNet()
 
-regr.print()
+    print(regr.get_params())
 
-print(regr.predict(X_test))
+    start = time()
+    regr.fit(X_train, y_train)
+    print(f"elapsed: {time() - start}")
+
+    print(regr.get_coef())
+
+    regr.print()
+
+    print(regr.predict(X_test))
