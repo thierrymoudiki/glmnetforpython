@@ -32,3 +32,5 @@ for dataset in datasets:
     print(regr.predict(X_test, s=0.1))
 
     print(regr.predict(X_test, s=np.asarray([0.1, 0.5])))
+
+    print(regr.predict(X_test, s=0.5))
