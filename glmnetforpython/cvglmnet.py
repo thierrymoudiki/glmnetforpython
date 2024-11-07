@@ -263,9 +263,7 @@ def cvglmnet(
         nz = np.transpose(np.sum(nz, axis=0))
 
     if len(foldid) == 0:
-        ma = np.tile(
-            np.arange(nfolds), [1, int(np.floor(nobs / nfolds))]
-        )
+        ma = np.tile(np.arange(nfolds), [1, int(np.floor(nobs / nfolds))])
         mb = np.arange(np.mod(nobs, nfolds))
         mb = np.reshape(mb, [1, mb.size])
         population = np.append(ma, mb, axis=1)
@@ -408,9 +406,7 @@ def cvglmnet(
     ).reshape([1])
     idmin = options["lambdau"] == CVerr["lambda_min"]
     semin = cvm[idmin] + cvsd[idmin]
-    CVerr["lambda_1se"] = np.amax(options["lambdau"][cvm <= semin]).reshape(
-        [1]
-    )
+    CVerr["lambda_1se"] = np.amax(options["lambdau"][cvm <= semin]).reshape([1])
     CVerr["class"] = "cvglmnet"
 
     return CVerr

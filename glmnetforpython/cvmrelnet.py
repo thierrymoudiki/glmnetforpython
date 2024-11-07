@@ -49,9 +49,7 @@ def cvmrelnet(
     # convert nlams to scipy array
     nlams = np.asarray(nlams, dtype=np.int64)
 
-    N = nobs - np.reshape(
-        np.sum(np.isnan(predmat[:, 1, :]), axis=0), (1, -1)
-    )
+    N = nobs - np.reshape(np.sum(np.isnan(predmat[:, 1, :]), axis=0), (1, -1))
     bigY = np.tile(y[:, :, None], [1, 1, lambdau.size])
 
     if ptype == "mse":

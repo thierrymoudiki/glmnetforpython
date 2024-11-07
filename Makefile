@@ -54,14 +54,14 @@ docs: install ## generate docs
 	#pip install black pdoc 
 	#black glmnetforpython/* --line-length=80	
 	#find glmnetforpython/ -name "*.py" -exec autopep8 --max-line-length=80 --in-place {} +
-	pdoc -t docs glmnetforpython/* --output-dir glmnetforpython-docs
+	pdoc -t docs glmnetforpython/glmnet_class.py --output-dir glmnetforpython-docs
 	find . -name '__pycache__' -exec rm -fr {} +
 
 servedocs: install ## compile the docs watching for change	 	
 	pip install black pdoc 
 	black glmnetforpython/* --line-length=80	
 	find glmnetforpython/ -name "*.py" -exec autopep8 --max-line-length=80 --in-place {} +
-	pdoc -t docs glmnetforpython/* 
+	pdoc -t docs glmnetforpython/glmnet_class.py
 	find . -name '__pycache__' -exec rm -fr {} +
 
 release: dist ## package and upload a release

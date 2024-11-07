@@ -114,9 +114,7 @@ def cvlognet(
         ly = np.dot(y * ly, np.asarray([1.0, 1.0]).reshape([2, 1]))
         cvraw = 2 * (np.tile(ly, [1, lambdau.size]) - lp)
     elif ptype == "mae":
-        cvraw = np.abs(yy1 - (1 - predmat)) + np.abs(
-            yy2 - (1 - predmat)
-        )
+        cvraw = np.abs(yy1 - (1 - predmat)) + np.abs(yy2 - (1 - predmat))
     elif ptype == "class":
         cvraw = yy1 * (predmat > 0.5) + yy2 * (predmat <= 0.5)
 

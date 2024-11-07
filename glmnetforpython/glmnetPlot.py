@@ -76,7 +76,7 @@ import matplotlib.pyplot as plt
 import scipy
 
 
-def glmnetPlot(x, xvar="norm", label=False, ptype="coef", **options):    
+def glmnetPlot(x, xvar="norm", label=False, ptype="coef", **options):
 
     # process inputs
     xvar = getFromList(
@@ -220,7 +220,7 @@ def nonzeroCoef(beta, bystep=False):
 
 # end of nonzeroCoef()
 # =========================================
-def plotCoef(beta, norm, lambdau, df, dev, label, xvar, xlab, ylab, **options):    
+def plotCoef(beta, norm, lambdau, df, dev, label, xvar, xlab, ylab, **options):
 
     which = nonzeroCoef(beta)
     idwhich = [i for i in range(len(which)) if which[i] == True]

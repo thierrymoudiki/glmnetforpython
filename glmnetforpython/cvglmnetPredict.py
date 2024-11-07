@@ -79,6 +79,7 @@ import scipy
 from .cvglmnetCoef import cvglmnetCoef
 from .glmnetPredict import glmnetPredict
 
+
 def cvglmnetPredict(obj, newx=None, s="lambda_1se", **options):
     if newx is None:
         CVpred = cvglmnetCoef(obj)

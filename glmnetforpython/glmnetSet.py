@@ -187,6 +187,7 @@ AUTHORS:
 """
 import numpy as np
 
+
 def glmnetSet(opts=None):
 
     # default options
@@ -204,9 +205,7 @@ def glmnetSet(opts=None):
         "pmax": np.empty([0]),
         "exclude": np.empty([0], dtype=np.int64),
         "penalty_factor": np.empty([0]),
-        "cl": np.asarray(
-            [[np.float64(-np.inf)], [np.float64(np.inf)]]
-        ),
+        "cl": np.asarray([[np.float64(-np.inf)], [np.float64(np.inf)]]),
         "maxit": np.int32(1e5),
         "gtype": [],
         "ltype": "Newton",
@@ -225,11 +224,11 @@ def glmnetSet(opts=None):
     if (
         len(optsInOptions) > 0
     ):  # assert 'opts' keys are subsets of 'options' keys
-        #print(optsInOptions, " : unknown option for glmnetSet")
-        #raise ValueError(
+        # print(optsInOptions, " : unknown option for glmnetSet")
+        # raise ValueError(
         #    "attempting to set glmnet options that are not known to glmnetSet"
-        #)
-        pass 
+        # )
+        pass
     else:
         options = merge_dicts(options, opts)
 

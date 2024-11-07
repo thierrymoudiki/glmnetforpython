@@ -160,10 +160,7 @@ def glmnetPredict(
             nbeta = nbeta[:, lamlist["left"]] * np.tile(
                 np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
             ) + nbeta[:, lamlist["right"]] * (
-                1
-                - np.tile(
-                    np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
-                )
+                1 - np.tile(np.transpose(lamlist["frac"]), [nbeta.shape[0], 1])
             )
 
         if ptype == "coefficients":
@@ -273,9 +270,7 @@ def glmnetPredict(
         if ptype == "response":
             pp = np.exp(dp)
             psum = np.sum(pp, axis=0, keepdims=True)
-            result = np.transpose(
-                pp / np.tile(psum, [nclass, 1, 1]), [2, 0, 1]
-            )
+            result = np.transpose(pp / np.tile(psum, [nclass, 1, 1]), [2, 0, 1])
         if ptype == "link":
             result = np.transpose(dp, [2, 0, 1])
         if ptype == "class":
@@ -294,10 +289,7 @@ def glmnetPredict(
             nbeta = nbeta[:, lamlist["left"]] * np.tile(
                 np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
             ) + nbeta[:, lamlist["right"]] * (
-                1
-                - np.tile(
-                    np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
-                )
+                1 - np.tile(np.transpose(lamlist["frac"]), [nbeta.shape[0], 1])
             )
 
         if ptype == "coefficients":
@@ -343,7 +335,7 @@ def lambda_interp(lambdau, s):
         left = np.zeros([nums, 1], dtype=np.int64)
         right = left
         sfrac = np.zeros([nums, 1], dtype=np.float64)
-    else:        
+    else:
         s[s > np.amax(lambdau)] = np.amax(lambdau)
         s[s < np.amin(lambdau)] = np.amin(lambdau)
         k = len(lambdau)

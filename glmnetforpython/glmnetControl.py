@@ -71,7 +71,8 @@
 
 import numpy as np
 
-def glmnetControl(pars=None):    
+
+def glmnetControl(pars=None):
 
     # default options
     ivals = dict()

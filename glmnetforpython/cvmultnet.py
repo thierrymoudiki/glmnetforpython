@@ -66,9 +66,7 @@ def cvmultnet(
     ywt = np.sum(y, axis=1, keepdims=True)
     y = y / np.tile(ywt, [1, y.shape[1]])
     weights = weights * ywt
-    N = y.shape[0] - np.sum(
-        np.isnan(predmat[:, 1, :]), axis=0, keepdims=True
-    )
+    N = y.shape[0] - np.sum(np.isnan(predmat[:, 1, :]), axis=0, keepdims=True)
     bigY = np.tile(y[:, :, None], [1, 1, lambdau.size])
 
     if ptype == "mse":
