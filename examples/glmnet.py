@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import sys
 import glmnetforpython as glmnetpy
@@ -28,4 +29,6 @@ for dataset in datasets:
 
     regr.print()
 
-    print(regr.predict(X_test))
+    print(regr.predict(X_test, s=0.1))
+
+    print(regr.predict(X_test, s=np.asarray([0.1, 0.5])))
