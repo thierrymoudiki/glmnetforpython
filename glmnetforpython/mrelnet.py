@@ -4,6 +4,7 @@ Internal function called by glmnet. See also glmnet, cvglmnet
 
 """
 # import packages/methods
+import numpy as np
 import scipy
 import ctypes
 from .wtmean import wtmean
@@ -43,8 +44,8 @@ def mrelnet(
     #
     nr = y.shape[1]
     wym = wtmean(y, weights)
-    wym = scipy.reshape(wym, (1, wym.size))
-    yt2 = (y - scipy.tile(wym, (y.shape[0], 1))) ** 2
+    wym = np.reshape(wym, (1, wym.size))
+    yt2 = (y - np.tile(wym, (y.shape[0], 1))) ** 2
     nulldev = np.sum(wtmean(yt2, weights) * np.sum(weights))
 
     if len(offset) == 0:
@@ -221,16 +222,16 @@ def mrelnet(
         beta_list = list()
         if ninmax > 0:
             # TODO: is the reshape here done right?
-            ca = scipy.reshape(ca, (nx, nr, lmu))
+            ca = np.reshape(ca, (nx, nr, lmu))
             ca = ca[0:ninmax, :, :]
             ja = ia[0:ninmax] - 1  # ia is 1-indexed in fortran
             oja = np.argsort(ja)
             ja1 = ja[oja]
             df = np.any(np.abs(ca) > 0, axis=1)
             df = np.sum(df, axis=0)
-            df = scipy.reshape(df, (1, df.size))
+            df = np.reshape(df, (1, df.size))
             for k in range(0, nr):
-                ca1 = scipy.reshape(ca[:, k, :], (ninmax, lmu))
+                ca1 = np.reshape(ca[:, k, :], (ninmax, lmu))
                 cak = ca1[oja, :]
                 dfmat[k, :] = np.sum(np.abs(cak) > 0, axis=0)
                 beta = np.zeros([nvars, lmu], dtype=np.float64)

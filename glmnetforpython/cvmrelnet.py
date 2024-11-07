@@ -4,9 +4,9 @@ Internal function called by cvglmnet. See also cvglmnet
 
 """
 import scipy
-from glmnetPredict import glmnetPredict
-from wtmean import wtmean
-from cvcompute import cvcompute
+from .glmnetPredict import glmnetPredict
+from .wtmean import wtmean
+from .cvcompute import cvcompute
 
 
 def cvmrelnet(
@@ -35,24 +35,24 @@ def cvmrelnet(
     if len(offset) > 0:
         y = y - offset
 
-    predmat = np.ones([nobs, nc, lambdau.size]) * scipy.NAN
-    nfolds = scipy.amax(foldid) + 1
+    predmat = np.ones([nobs, nc, lambdau.size]) * np.NAN
+    nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
         which = foldid == i
         fitobj = fit[i].copy()
         fitobj["offset"] = False
         preds = glmnetPredict(fitobj, x[which,])
-        nlami = scipy.size(fit[i]["lambdau"])
+        nlami = np.size(fit[i]["lambdau"])
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
     nlams = np.asarray(nlams, dtype=np.integer)
 
-    N = nobs - scipy.reshape(
-        np.sum(scipy.isnan(predmat[:, 1, :]), axis=0), (1, -1)
+    N = nobs - np.reshape(
+        np.sum(np.isnan(predmat[:, 1, :]), axis=0), (1, -1)
     )
-    bigY = scipy.tile(y[:, :, None], [1, 1, lambdau.size])
+    bigY = np.tile(y[:, :, None], [1, 1, lambdau.size])
 
     if ptype == "mse":
         cvraw = np.sum((bigY - predmat) ** 2, axis=1).squeeze()
@@ -73,7 +73,7 @@ def cvmrelnet(
 
     cvm = wtmean(cvraw, weights)
     sqccv = (cvraw - cvm) ** 2
-    cvsd = scipy.sqrt(wtmean(sqccv, weights) / (N - 1))
+    cvsd = np.sqrt(wtmean(sqccv, weights) / (N - 1))
 
     result = dict()
     result["cvm"] = cvm

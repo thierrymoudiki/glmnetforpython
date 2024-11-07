@@ -4,9 +4,9 @@ Internal function called by cvglmnet. See also cvglmnet
 
 """
 import scipy
-from glmnetPredict import glmnetPredict
-from wtmean import wtmean
-from cvcompute import cvcompute
+from .glmnetPredict import glmnetPredict
+from .wtmean import wtmean
+from .cvcompute import cvcompute
 
 
 def cvlognet(
@@ -36,15 +36,15 @@ def cvlognet(
     prob_max = 1 - prob_min
     nc = y.shape[1]
     if nc == 1:
-        classes, sy = scipy.unique(y, return_inverse=True)
+        classes, sy = np.unique(y, return_inverse=True)
         nc = len(classes)
-        indexes = scipy.eye(nc, nc)
+        indexes = np.eye(nc, nc)
         y = indexes[sy, :]
     else:
-        classes = scipy.arange(nc) + 1  # 1:nc
+        classes = np.arange(nc) + 1  # 1:nc
 
     N = y.size
-    nfolds = scipy.amax(foldid) + 1
+    nfolds = np.amax(foldid) + 1
     if (N / nfolds < 10) and (type == "auc"):
         print(
             "Warning: Too few (<10) observations per fold for type.measure=auc in cvlognet"
@@ -62,8 +62,8 @@ def cvlognet(
         grouped = False
 
     is_offset = not (len(offset) == 0)
-    predmat = np.ones([y.shape[0], lambdau.size]) * scipy.NAN
-    nfolds = scipy.amax(foldid) + 1
+    predmat = np.ones([y.shape[0], lambdau.size]) * np.NAN
+    nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
         which = foldid == i
@@ -75,14 +75,14 @@ def cvlognet(
         preds = glmnetPredict(
             fitobj, x[which,], np.empty([0]), "response", False, off_sub
         )
-        nlami = scipy.size(fit[i]["lambdau"])
+        nlami = np.size(fit[i]["lambdau"])
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
     nlams = np.asarray(nlams, dtype=np.integer)
 
     if ptype == "auc":
-        cvraw = np.zeros([nfolds, lambdau.size]) * scipy.NaN
+        cvraw = np.zeros([nfolds, lambdau.size]) * np.NaN
         good = np.zeros([nfolds, lambdau.size])
         for i in range(nfolds):
             good[i, 0 : nlams[i]] = 1
@@ -98,21 +98,21 @@ def cvlognet(
         weights = sweights
     else:
         ywt = np.sum(y, axis=1, keepdims=True)
-        y = y / scipy.tile(ywt, [1, y.shape[1]])
+        y = y / np.tile(ywt, [1, y.shape[1]])
         weights = weights * ywt
-        N = y.shape[0] - np.sum(scipy.isnan(predmat), axis=0, keepdims=True)
-        yy1 = scipy.tile(y[:, 0:1], [1, lambdau.size])
-        yy2 = scipy.tile(y[:, 1:2], [1, lambdau.size])
+        N = y.shape[0] - np.sum(np.isnan(predmat), axis=0, keepdims=True)
+        yy1 = np.tile(y[:, 0:1], [1, lambdau.size])
+        yy2 = np.tile(y[:, 1:2], [1, lambdau.size])
 
     if ptype == "mse":
         cvraw = (yy1 - (1 - predmat)) ** 2 + (yy2 - (1 - predmat)) ** 2
     elif ptype == "deviance":
-        predmat = scipy.minimum(scipy.maximum(predmat, prob_min), prob_max)
+        predmat = np.minimum(np.maximum(predmat, prob_min), prob_max)
         lp = yy1 * np.log(1 - predmat) + yy2 * np.log(predmat)
         ly = np.log(y)
         ly[y == 0] = 0
         ly = np.dot(y * ly, np.asarray([1.0, 1.0]).reshape([2, 1]))
-        cvraw = 2 * (scipy.tile(ly, [1, lambdau.size]) - lp)
+        cvraw = 2 * (np.tile(ly, [1, lambdau.size]) - lp)
     elif ptype == "mae":
         cvraw = np.abs(yy1 - (1 - predmat)) + np.abs(
             yy2 - (1 - predmat)
@@ -134,7 +134,7 @@ def cvlognet(
 
     cvm = wtmean(cvraw, weights)
     sqccv = (cvraw - cvm) ** 2
-    cvsd = scipy.sqrt(wtmean(sqccv, weights) / (N - 1))
+    cvsd = np.sqrt(wtmean(sqccv, weights) / (N - 1))
 
     result = dict()
     result["cvm"] = cvm
@@ -158,12 +158,12 @@ def auc_mat(y, prob, weights=None):
         weights = np.ones([y.shape[0], 1])
     wweights = weights * y
     wweights = wweights.flatten()
-    wweights = scipy.reshape(wweights, [1, wweights.size])
+    wweights = np.reshape(wweights, [1, wweights.size])
     ny = y.shape[0]
     a = np.zeros([ny, 1])
     b = np.ones([ny, 1])
-    yy = scipy.vstack((a, b))
-    pprob = scipy.vstack((prob, prob))
+    yy = np.vstack((a, b))
+    pprob = np.vstack((prob, prob))
     result = auc(yy, pprob, wweights)
     return result
 
@@ -171,9 +171,9 @@ def auc_mat(y, prob, weights=None):
 # =========================
 def auc(y, prob, w):
     if len(w) == 0:
-        mindiff = scipy.amin(scipy.diff(scipy.unique(prob)))
-        pert = scipy.random.uniform(0, mindiff / 3, prob.size)
-        t, rprob = scipy.unique(prob + pert, return_inverse=True)
+        mindiff = np.amin(np.diff(np.unique(prob)))
+        pert = np.random.uniform(0, mindiff / 3, prob.size)
+        t, rprob = np.unique(prob + pert, return_inverse=True)
         n1 = np.sum(y, keepdims=True)
         n0 = y.shape[0] - n1
         u = np.sum(rprob[y == 1]) - n1 * (n1 + 1) / 2
@@ -182,9 +182,9 @@ def auc(y, prob, w):
         op = np.argsort(prob)
         y = y[op]
         w = w[op]
-        cw = scipy.cumsum(w)
+        cw = np.cumsum(w)
         w1 = w[y == 1]
-        cw1 = scipy.cumsum(w1)
+        cw1 = np.cumsum(w1)
         wauc = np.sum(w1 * (cw[y == 1] - cw1))
         sumw = cw1[-1]
         sumw = sumw * (c1[-1] - sumw)

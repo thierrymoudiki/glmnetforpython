@@ -70,7 +70,7 @@
 """
 
 import scipy
-from glmnetCoef import glmnetCoef
+from .glmnetCoef import glmnetCoef
 
 
 def cvglmnetCoef(obj, s=None):

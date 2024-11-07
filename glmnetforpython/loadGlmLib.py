@@ -30,7 +30,7 @@ def loadGlmLib():
             #print(f"\n\n Loading shared library: {glmnet_so}")
             glmlib = ctypes.cdll.LoadLibrary(glmnet_so)
         elif os.name == "nt":  # For Windows systems
-            print(f"Loading shared library: {glmnet_dll}")
+            #print(f"Loading shared library: {glmnet_dll}")
             glmlib = ctypes.cdll.LoadLibrary(glmnet_dll)
         else:
             raise OSError("Unsupported operating system")

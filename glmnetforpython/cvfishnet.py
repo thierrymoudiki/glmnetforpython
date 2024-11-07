@@ -4,9 +4,9 @@ Internal cvglmnet function. See also cvglmnet.
 
 """
 import scipy
-from glmnetPredict import glmnetPredict
-from wtmean import wtmean
-from cvcompute import cvcompute
+from .glmnetPredict import glmnetPredict
+from .wtmean import wtmean
+from .cvcompute import cvcompute
 
 
 def cvfishnet(
@@ -35,8 +35,8 @@ def cvfishnet(
     else:
         is_offset = False
 
-    predmat = np.ones([y.size, lambdau.size]) * scipy.NAN
-    nfolds = scipy.amax(foldid) + 1
+    predmat = np.ones([y.size, lambdau.size]) * np.NAN
+    nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
         which = foldid == i
@@ -46,14 +46,14 @@ def cvfishnet(
         else:
             off_sub = np.empty([0])
         preds = glmnetPredict(fitobj, x[which,], offset=off_sub)
-        nlami = scipy.size(fit[i]["lambdau"])
+        nlami = np.size(fit[i]["lambdau"])
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
     nlams = np.asarray(nlams, dtype=np.integer)
 
-    N = y.shape[0] - np.sum(scipy.isnan(predmat), axis=0)
-    yy = scipy.tile(y, [1, lambdau.size])
+    N = y.shape[0] - np.sum(np.isnan(predmat), axis=0)
+    yy = np.tile(y, [1, lambdau.size])
 
     if ptype == "mse":
         cvraw = (yy - predmat) ** 2
@@ -76,7 +76,7 @@ def cvfishnet(
 
     cvm = wtmean(cvraw, weights)
     sqccv = (cvraw - cvm) ** 2
-    cvsd = scipy.sqrt(wtmean(sqccv, weights) / (N - 1))
+    cvsd = np.sqrt(wtmean(sqccv, weights) / (N - 1))
 
     result = dict()
     result["cvm"] = cvm

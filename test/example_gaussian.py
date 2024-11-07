@@ -34,12 +34,12 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = np.float64)
-y = scipy.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
+x = np.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = np.float64)
+y = np.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
 
 # create weights
 t = np.ones((50, 1), dtype = np.float64)
-wts = scipy.row_stack((t, 2*t))
+wts = np.row_stack((t, 2*t))
 
 # call glmnet
 fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'gaussian', \
@@ -67,7 +67,7 @@ cvglmnetCoef.cvglmnetCoef(cvfit, s = 'lambda_min')
 cvglmnetPredict.cvglmnetPredict(cvfit, newx = x[0:5,], s='lambda_min')
 
 #%%
-foldid = scipy.random.choice(10, size = y.shape[0], replace = True)
+foldid = np.random.choice(10, size = y.shape[0], replace = True)
 
 cv1=cvglmnet.cvglmnet(x = x.copy(),y = y.copy(),foldid=foldid,alpha=1)
 cv0p5=cvglmnet.cvglmnet(x = x.copy(),y = y.copy(),foldid=foldid,alpha=0.5)
@@ -107,9 +107,9 @@ glmnetPlot.glmnetPlot(pfit, label = True)
 
 #%%
 plt.figure()
-scipy.random.seed(101)
-x = scipy.random.rand(100,10)
-y = scipy.random.rand(100,1)
+np.random.seed(101)
+x = np.random.rand(100,10)
+y = np.random.rand(100,1)
 fit = glmnet.glmnet(x = x, y = y)
 glmnetPlot.glmnetPlot(fit)
 

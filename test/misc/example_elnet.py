@@ -22,8 +22,8 @@ glmlib = ctypes.cdll.LoadLibrary('../../lib/GLMnet.so') # this is a bit of a pai
 # type.multinomial=c("ungrouped","grouped")){
 
 baseDataDir= '/home/bbalasub/Desktop/Summer2016/glmnet/glmnet_R/'
-y = scipy.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
-x = scipy.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = np.float64)
+y = np.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
+x = np.loadtxt(baseDataDir + 'QuickStartExampleX.dat', dtype = np.float64)
 
 # convert x and y to 'F' (fortran) order and scipy float64
 y = y.astype(dtype = np.float64, order = 'C', copy = True)
@@ -65,8 +65,8 @@ vp_r = vp.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 options = glmnetSet()
 inparms = glmnetControl()
 cl = options['cl']
-cl[0, cl[0, :] == scipy.double('-inf')] = -1.0*inparms['big']    
-cl[1, cl[1, :] == scipy.double('inf')]  =  1.0*inparms['big']   
+cl[0, cl[0, :] == np.double('-inf')] = -1.0*inparms['big']    
+cl[1, cl[1, :] == np.double('inf')]  =  1.0*inparms['big']   
 if cl.shape[1] < ni:
     if cl.shape[1] == 1:
         cl = cl*np.ones([1, ni], dtype = np.float64)

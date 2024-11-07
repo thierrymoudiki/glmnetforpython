@@ -34,8 +34,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'BinomialExampleX.dat', dtype = np.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'BinomialExampleY.dat', dtype = np.float64)
+x = np.loadtxt(baseDataDir + 'BinomialExampleX.dat', dtype = np.float64, delimiter = ',')
+y = np.loadtxt(baseDataDir + 'BinomialExampleY.dat', dtype = np.float64)
 
 # call glmnet
 fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'binomial')

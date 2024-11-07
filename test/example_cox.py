@@ -34,8 +34,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'CoxExampleX.dat', dtype = np.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'CoxExampleY.dat', dtype = np.float64, delimiter = ',')
+x = np.loadtxt(baseDataDir + 'CoxExampleX.dat', dtype = np.float64, delimiter = ',')
+y = np.loadtxt(baseDataDir + 'CoxExampleY.dat', dtype = np.float64, delimiter = ',')
 
 print(y[0:5, :])
 

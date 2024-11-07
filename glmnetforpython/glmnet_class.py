@@ -1,5 +1,15 @@
+import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
 from .glmnet import glmnet
+from .glmnetPlot import glmnetPlot
+from .glmnetPrint import glmnetPrint
+from .glmnetCoef import glmnetCoef 
+from .glmnetPredict import glmnetPredict
+from .cvglmnet import cvglmnet
+from .cvglmnetCoef import cvglmnetCoef
+from .cvglmnetPlot import cvglmnetPlot 
+from .cvglmnetPredict import cvglmnetPredict
 
 
 class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
@@ -49,6 +59,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
 
     def __init__(
         self,
+        weights=None,
         alpha=1.0,
         nlambda=100,
         lambdau=None,
@@ -67,6 +78,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         ncores=-1,
         verbose=False,
     ):
+        self.weights = weights
         self.alpha = alpha
         self.nlambda = nlambda
         self.lambdau = lambdau
@@ -85,11 +97,35 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         self.ncores = ncores
         self.verbose = verbose
         self.model = None
+        self.coef_ = None
 
-    def fit(self, X, y):
+    def fit(self, X, y, s=None, exact=False, **kwargs):
+        """
+        Fit the model.
+
+        Parameters
+        ----------
+
+        X : array-like
+            The predictor variables.
+        y : array-like
+            The response variable.
+        s : float, optional
+            The value of lambda at which extraction is made. Default is None.
+        exact : bool, optional
+            Whether to use exact lambda values. Default is False.
+        **kwargs : dict
+            Additional arguments to pass to glmnetCoef.
+
+        Returns
+        -------
+        self : object
+            Returns the instance itself.
+        """
         self.model = glmnet(
             x=X,
             y=y,
+            weights=self.weights,
             alpha=self.alpha,
             nlambda=self.nlambda,
             lambdau=self.lambdau,
@@ -108,10 +144,76 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
             ncores=self.ncores,
             verbose=self.verbose,
         )
+        self.coef_ = glmnetCoef(self.model, s=s, exact=exact, **kwargs)
         return self
+    
+    def get_coef(self, s=None, exact=False):
+        """
+        Get the coefficients.
 
-    def predict(self, X):
-        return self.model.predict(X)
+        Parameters
+        ----------
+        s : float, optional
+            The value of lambda at which extraction is made. Default is None.
+        exact : bool, optional
+            Whether to use exact lambda values or not. Default is False.        
+
+        Returns
+        -------
+        coef : array-like
+            The coefficients.            
+        """
+        if s is None:
+            return self.coef_
+        assert self.model is not None, "Model not fitted yet."
+        return glmnetCoef(self.model, s=s, exact=exact)
+
+    def print(self):
+        """
+        Print the model's characteristics.
+        """
+        return glmnetPrint(self.model)
+
+    def plot(self, xvar="lambda", label=True):
+        """
+        Plot the model's coefficients.
+
+        Parameters
+        ----------
+        xvar : str, optional
+            The variable to plot ("norm" for the L1 norm of coefficients,
+            "lambda" for the log-lambda value or "dev" for percentage of 
+            deviance explained). Default is "lambda".
+        label : bool, optional
+            Whether to label the plot. Default is True.
+        """
+        assert xvar in ("norm", "lambda", "dev"), "Invalid input for xvar."
+        return glmnetPlot(self.model, xvar=xvar, label=label)
+
+    def predict(self, X, ptype="response", s=np.asarray([0.1, 0.5]), exact=False, **kwargs):
+        """
+        Predict the response variable.
+
+        Parameters
+        ----------
+        X : array-like
+            The predictor variables.
+        ptype : str
+            The type of prediction to make. 
+            "response" the sames as "link" for "gaussian" family.
+            "coefficients" computes the coefficients at values of s
+            "nonzero" retuns a list of the indices of the nonzero coefficients for each value of s.
+            Default is "response".
+        s : float
+            The value of lambda at which extraction is made. Default is None.
+        exact : bool, optional
+            Whether to use exact lambda values or not. Default is False.
+        **kwargs : dict
+            Additional arguments            
+        """        
+        assert ptype in ("response", "coefficients", "nonzero"),\
+              "Invalid input for ptype."
+        return glmnetPredict(self.model, X, ptype=ptype, s=s, exact=exact, **kwargs)
 
     def predict_proba(self, X):
         return self.model.predict_proba(X)
@@ -119,5 +221,3 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
     def predict_log_proba(self, X):
         return self.model.predict_log_proba(X)
 
-    def coef_(self):
-        return self.model.coef_

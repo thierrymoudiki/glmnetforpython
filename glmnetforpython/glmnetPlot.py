@@ -59,10 +59,10 @@
 
  EXAMPLES:
      import matplotlib.pyplot as plt
-     scipy.random.seed(1)
-     x=scipy.random.normal(size = (100,20))
-     y=scipy.random.normal(size = (100,1))
-     g4=scipy.random.choice(4,size = (100,1))*1.0
+     np.random.seed(1)
+     x=np.random.normal(size = (100,20))
+     y=np.random.normal(size = (100,1))
+     g4=np.random.choice(4,size = (100,1))*1.0
      fit1=glmnet(x = x.copy(),y = y.copy())
      glmnetPlot(fit1)
      plt.figure()
@@ -71,11 +71,12 @@
      plt.figure()
      glmnetPlot(fit3)
 """
+import numpy as np
+import matplotlib.pyplot as plt
 import scipy
 
 
-def glmnetPlot(x, xvar="norm", label=False, ptype="coef", **options):
-    import matplotlib.pyplot as plt
+def glmnetPlot(x, xvar="norm", label=False, ptype="coef", **options):    
 
     # process inputs
     xvar = getFromList(
@@ -152,11 +153,11 @@ def glmnetPlot(x, xvar="norm", label=False, ptype="coef", **options):
                     if i < ncl - 1:
                         plt.figure()
         else:
-            dfseq = scipy.round_(scipy.mean(x["dfmat"], axis=0))
+            dfseq = np.round_(np.mean(x["dfmat"], axis=0))
             coefnorm = beta[1] * 0
             for i in range(len(beta)):
                 coefnorm = coefnorm + np.abs(beta[i]) ** 2
-            coefnorm = scipy.sqrt(coefnorm)
+            coefnorm = np.sqrt(coefnorm)
             if x["class"] == "multnet":
                 mstr = "Coefficient 2Norms"
                 handle = plotCoef(
@@ -210,7 +211,7 @@ def getFromList(xvar, xvarbase, errMsg):
 def nonzeroCoef(beta, bystep=False):
     result = np.abs(beta) > 0
     if len(result.shape) == 1:
-        result = scipy.reshape(result, [result.shape[0], 1])
+        result = np.reshape(result, [result.shape[0], 1])
     if not bystep:
         result = np.any(result, axis=1)
 

@@ -44,11 +44,11 @@
 
  EXAMPLES:
  
-    scipy.random.seed(1)
-    x=scipy.random.normal(size = (100,20))
-    y=scipy.random.normal(size = (100,1))
-    g2=scipy.random.choice(2,size = (100,1))*1.0
-    g4=scipy.random.choice(4,size = (100,1))*1.0
+    np.random.seed(1)
+    x=np.random.normal(size = (100,20))
+    y=np.random.normal(size = (100,1))
+    g2=np.random.choice(2,size = (100,1))*1.0
+    g4=np.random.choice(4,size = (100,1))*1.0
 
     plt.figure()     
     fit1=cvglmnet(x = x.copy(),y = y.copy())
@@ -64,6 +64,7 @@
      
 """
 
+import numpy as np
 import scipy
 
 

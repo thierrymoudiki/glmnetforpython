@@ -15,6 +15,8 @@ print(regr.get_params())
 
 regr.fit(X_train, y_train)
 
-print(regr.get_params())
+print(regr.get_coef())
 
-#print(regr.predict(X_test))
+regr.print()
+
+print(regr.predict(X_test))

@@ -34,8 +34,8 @@ importlib.reload(cvglmnetPredict)
 baseDataDir= '../data/'
 
 # load data
-x = scipy.loadtxt(baseDataDir + 'PoissonExampleX.dat', dtype = np.float64, delimiter = ',')
-y = scipy.loadtxt(baseDataDir + 'PoissonExampleY.dat', dtype = np.float64, delimiter = ',')
+x = np.loadtxt(baseDataDir + 'PoissonExampleX.dat', dtype = np.float64, delimiter = ',')
+y = np.loadtxt(baseDataDir + 'PoissonExampleY.dat', dtype = np.float64, delimiter = ',')
 
 # call glmnet
 fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'poisson')

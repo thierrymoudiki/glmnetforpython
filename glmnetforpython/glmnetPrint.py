@@ -41,8 +41,8 @@
     glmnet, glmnetSet, glmnetPredict and glmnetCoef methods.
  
  EXAMPLES:
-    x = scipy.random.normal(size=[100,20])
-    y = scipy.random.normal(size=[100,1])
+    x = np.random.normal(size=[100,20])
+    y = np.random.normal(size=[100,1])
     fit=glmnet(x = x,y = y);
     glmnetPrint(fit);
 

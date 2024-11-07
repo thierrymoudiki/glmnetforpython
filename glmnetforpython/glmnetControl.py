@@ -69,10 +69,9 @@
     glmnet.
 """
 
+import numpy as np
 
-def glmnetControl(pars=None):
-    import scipy
-    import numpy as np
+def glmnetControl(pars=None):    
 
     # default options
     ivals = dict()

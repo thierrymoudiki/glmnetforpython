@@ -4,6 +4,7 @@ Internal function called by glmnet. See also glmnet, cvglmnet
 
 """
 # import packages/methods
+import numpy as np
 import scipy
 import ctypes
 from .loadGlmLib import loadGlmLib
@@ -52,12 +53,12 @@ def lognet(
         )
 
     if nc == 1:
-        classes, sy = scipy.unique(y, return_inverse=True)
+        classes, sy = np.unique(y, return_inverse=True)
         nc = len(classes)
-        indexes = scipy.eye(nc, nc)
+        indexes = np.eye(nc, nc)
         y = indexes[sy, :]
     else:
-        classes = scipy.arange(nc) + 1  # 1:nc
+        classes = np.arange(nc) + 1  # 1:nc
     #
     if family == "binomial":
         if nc > 2:
@@ -70,8 +71,8 @@ def lognet(
     #
     if len(weights) != 0:
         t = weights > 0
-        if ~scipy.all(t):
-            t = scipy.reshape(t, (len(y),))
+        if ~np.all(t):
+            t = np.reshape(t, (len(y),))
             y = y[t, :]
             x = x[t, :]
             weights = weights[t]
@@ -85,7 +86,7 @@ def lognet(
         else:
             mv, ny = y.shape
 
-        y = y * scipy.tile(weights, (1, ny))
+        y = y * np.tile(weights, (1, ny))
 
     #
     if len(offset) == 0:
@@ -101,7 +102,7 @@ def lognet(
             )
         if nc == 1:
             if do[1] == 1:
-                offset = scipy.column_stack((offset, -offset), 1)
+                offset = np.column_stack((offset, -offset), 1)
             if do[1] > 2:
                 raise ValueError(
                     "offset should have 1 or 2 columns in binomial call to glmnet"
@@ -288,22 +289,22 @@ def lognet(
     # create return fit dictionary
 
     if family == "multinomial":
-        a0 = a0 - scipy.tile(scipy.mean(a0), (nc, 1))
+        a0 = a0 - np.tile(np.mean(a0), (nc, 1))
         dfmat = a0.copy()
         dd = np.asarray([nvars, lmu], dtype=np.integer)
         beta_list = list()
         if ninmax > 0:
             # TODO: is the reshape here done right?
-            ca = scipy.reshape(ca, (nx, nc, lmu))
+            ca = np.reshape(ca, (nx, nc, lmu))
             ca = ca[0:ninmax, :, :]
             ja = ia[0:ninmax] - 1  # ia is 1-indexed in fortran
             oja = np.argsort(ja)
             ja1 = ja[oja]
             df = np.any(np.abs(ca) > 0, axis=1)
             df = np.sum(df)
-            df = scipy.reshape(df, (1, df.size))
+            df = np.reshape(df, (1, df.size))
             for k in range(0, nc):
-                ca1 = scipy.reshape(ca[:, k, :], (ninmax, lmu))
+                ca1 = np.reshape(ca[:, k, :], (ninmax, lmu))
                 cak = ca1[oja, :]
                 dfmat[k, :] = np.sum(np.abs(cak) > 0, axis=0)
                 beta = np.zeros([nvars, lmu], dtype=np.float64)

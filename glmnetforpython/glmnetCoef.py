@@ -61,15 +61,15 @@
     glmnet, glmnetPrint, glmnetPredict, and cvglmnet.
 
  EXAMPLES:
-    x = scipy.random.rand(100,20);
-    y = scipy.random.rand(100,1);
+    x = np.random.rand(100,20);
+    y = np.random.rand(100,1);
     fit = glmnet(x = x.copy(),y = y.copy());
     ncoef = glmnetCoef(fit,np.asarray([0.01, 0.001]));
 
 """
 
-import scipy
-from glmnetPredict import glmnetPredict
+import numpy as np
+from .glmnetPredict import glmnetPredict
 
 
 def glmnetCoef(obj, s=None, exact=False):

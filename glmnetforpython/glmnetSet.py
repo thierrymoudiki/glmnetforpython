@@ -185,11 +185,9 @@ AUTHORS:
     Department of Statistics, Stanford University, Stanford, California, USA.
 
 """
-
+import numpy as np
 
 def glmnetSet(opts=None):
-    import scipy
-    import numpy as np
 
     # default options
     options = {

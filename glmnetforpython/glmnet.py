@@ -87,8 +87,8 @@ class      Type of regression - internal usage
 EXAMPLES:
 --------
       # Gaussian
-      x = scipy.random.rand(100, 10)
-      y = scipy.random.rand(100, 1)
+      x = np.random.rand(100, 10)
+      y = np.random.rand(100, 1)
       fit = glmnet(x = x, y = y)
       fit = glmnet(x = x, y = y, alpha = 0.5)
       glmnetPrint(fit)
@@ -96,50 +96,50 @@ EXAMPLES:
       glmnetPredict(fit, x[0:10,:], np.asarray([0.01, 0.005])) # make predictions
 
       # Multivariate Gaussian:
-      x = scipy.random.rand(100, 10)
-      y = scipy.random.rand(100,3)
+      x = np.random.rand(100, 10)
+      y = np.random.rand(100,3)
       fit = glmnet(x, y, 'mgaussian')      
       glmnetPlot(fit, 'norm', False, '2norm')
       
       # Binomial
-      x = scipy.random.rand(100, 10)
-      y = scipy.random.rand(100,1)
+      x = np.random.rand(100, 10)
+      y = np.random.rand(100,1)
       y = (y > 0.5)*1.0
       fit = glmnet(x = x, y = y, family = 'binomial', alpha = 0.5)    
       
       # Multinomial
-      x = scipy.random.rand(100,10)
-      y = scipy.random.rand(100,1)
+      x = np.random.rand(100,10)
+      y = np.random.rand(100,1)
       y[y < 0.3] = 1.0
       y[y < 0.6] = 2.0
       y[y < 1.0] = 3.0
       fit = glmnet(x = x, y = y, family = 'multinomial', mtype = 'grouped')
 
       # poisson
-      x = scipy.random.rand(100,10)
-      y = scipy.random.poisson(size = [100, 1])*1.0
+      x = np.random.rand(100,10)
+      y = np.random.poisson(size = [100, 1])*1.0
       fit = glmnet(x = x, y = y, family = 'poisson')
       
       # cox
       N = 1000; p = 30;
       nzc = p/3;
-      x = scipy.random.normal(size = [N, p])
-      beta = scipy.random.normal(size = [nzc, 1])
+      x = np.random.normal(size = [N, p])
+      beta = np.random.normal(size = [nzc, 1])
       fx = np.dot(x[:, 0:nzc], beta/3)
       hx = np.exp(fx)
-      ty = scipy.random.exponential(scale = 1/hx, size = [N, 1])
-      tcens = scipy.random.binomial(1, 0.3, size = [N, 1])
+      ty = np.random.exponential(scale = 1/hx, size = [N, 1])
+      tcens = np.random.binomial(1, 0.3, size = [N, 1])
       tcens = 1 - tcens
-      y = scipy.column_stack((ty, tcens))
+      y = np.column_stack((ty, tcens))
       fit = glmnet(x = x.copy(), y = y.copy(), family = 'cox')
       glmnetPlot(fit)
       
       # sparse example
       N = 1000000;
-      x = scipy.random.normal(size = [N,10])
+      x = np.random.normal(size = [N,10])
       x[x < 3.0] = 0.0
-      xs = scipy.sparse.csc_matrix(x, dtype = np.float64)
-      y = scipy.random.binomial(1, 0.5, size =[N,1])
+      xs = np.sparse.csc_matrix(x, dtype = np.float64)
+      y = np.random.binomial(1, 0.5, size =[N,1])
       y = y*1.0
       st = time.time()
       fit = glmnet.glmnet(x = xs, y = y, family = 'binomial')
@@ -352,11 +352,11 @@ def glmnet(*, x, y, family="gaussian", **options):
     exclude = options["exclude"]
     # TBD: test this
     if not (len(exclude) == 0):
-        exclude = scipy.unique(exclude)
+        exclude = np.unique(exclude)
         if np.any(exclude < 0) or np.any(exclude >= nvars):
             raise ValueError("Error: Some excluded variables are out of range")
         else:
-            jd = scipy.append(
+            jd = np.append(
                 len(exclude), exclude + 1
             )  # indices are 1-based in fortran
     else:
@@ -427,7 +427,7 @@ def glmnet(*, x, y, family="gaussian", **options):
         if any(lambdau < 0):
             raise ValueError("ERROR: lambdas should be non-negative")
 
-        ulam = -scipy.sort(-lambdau)  # reverse sort
+        ulam = -np.sort(-lambdau)  # reverse sort
         nlam = lambdau.size
 
     maxit = np.int32(options["maxit"])
@@ -471,18 +471,18 @@ def glmnet(*, x, y, family="gaussian", **options):
     is_sparse = False
     if scipy.sparse.issparse(x):
         is_sparse = True
-        tx = scipy.sparse.csc_matrix(x, dtype=np.float64)
+        tx = np.sparse.csc_matrix(x, dtype=np.float64)
         x = tx.data
         x = x.reshape([len(x), 1])
         irs = tx.indices + 1
         pcs = tx.indptr + 1
-        irs = scipy.reshape(
+        irs = np.reshape(
             irs,
             [
                 len(irs),
             ],
         )
-        pcs = scipy.reshape(
+        pcs = np.reshape(
             pcs,
             [
                 len(pcs),

@@ -6,7 +6,6 @@ Internal function called by glmnet. See also glmnet, cvglmnet
 
 # import packages/methods
 import numpy as np
-import scipy
 import ctypes
 from .loadGlmLib import loadGlmLib
 

@@ -86,10 +86,10 @@
 
 EXAMPLES:
 
-    x = scipy.random.normal(size = [100,20])
-    y = scipy.random.normal(size = [100,1])
-    g2 = scipy.random.choice(2, size = [100, 1])*1.0 # must be float64
-    g4 = scipy.random.choice(4, size = [100, 1])*1.0 # must be float64
+    x = np.random.normal(size = [100,20])
+    y = np.random.normal(size = [100,1])
+    g2 = np.random.choice(2, size = [100, 1])*1.0 # must be float64
+    g4 = np.random.choice(4, size = [100, 1])*1.0 # must be float64
     
     fit1 = glmnet(x = x.copy(),y = y.copy());
     print( glmnetPredict(fit1,x[0:5,:],np.asarray([0.01,0.005])) )
@@ -103,8 +103,8 @@ EXAMPLES:
     print(glmnetPredict(fit3, x[0:3,:], np.asarray([0.01, 0.5]), 'response'))
     
 """
+import numpy as np
 import scipy
-import scipy.interpolate
 
 
 def glmnetPredict(
@@ -141,7 +141,7 @@ def glmnetPredict(
         )
 
     # we convert newx to full here since sparse and full operations do not seem to
-    # be overloaded completely in scipy.
+    # be overloaded completely in np.
     if scipy.sparse.issparse(newx):
         newx = newx.todense()
 
@@ -152,16 +152,16 @@ def glmnetPredict(
         else:
             a0 = np.transpose(fit["a0"])
 
-        a0 = scipy.reshape(a0, [1, a0.size])  # convert to 1 x N for appending
-        nbeta = scipy.row_stack((a0, fit["beta"]))
-        if scipy.size(s) > 0:
+        a0 = np.reshape(a0, [1, a0.size])  # convert to 1 x N for appending
+        nbeta = np.row_stack((a0, fit["beta"]))
+        if np.size(s) > 0:
             lambdau = fit["lambdau"]
             lamlist = lambda_interp(lambdau, s)
-            nbeta = nbeta[:, lamlist["left"]] * scipy.tile(
+            nbeta = nbeta[:, lamlist["left"]] * np.tile(
                 np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
             ) + nbeta[:, lamlist["right"]] * (
                 1
-                - scipy.tile(
+                - np.tile(
                     np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
                 )
             )
@@ -173,9 +173,9 @@ def glmnetPredict(
         if ptype == "nonzero":
             result = nonzeroCoef(nbeta[1 : nbeta.shape[0], :], True)
             return result
-        # use scipy.sparse.hstack instead of column_stack for sparse matrices
+        # use np.sparse.hstack instead of column_stack for sparse matrices
         result = np.dot(
-            scipy.column_stack((np.ones([newx.shape[0], 1]), newx)), nbeta
+            np.column_stack((np.ones([newx.shape[0], 1]), newx)), nbeta
         )
 
         if fit["offset"]:
@@ -186,7 +186,7 @@ def glmnetPredict(
             if offset.shape[1] == 2:
                 offset = offset[:, 1]
 
-            result = result + scipy.tile(offset, [1, result.shape[1]])
+            result = result + np.tile(offset, [1, result.shape[1]])
 
     # fishnet
     if fit["class"] == "fishnet" and ptype == "response":
@@ -217,19 +217,19 @@ def glmnetPredict(
             lambdau = fit["lambdau"]
             lamlist = lambda_interp(lambdau, s)
             for i in range(nclass):
-                kbeta = scipy.row_stack((a0[i, :], nbeta[i]))
-                kbeta = kbeta[:, lamlist["left"]] * scipy.tile(
+                kbeta = np.row_stack((a0[i, :], nbeta[i]))
+                kbeta = kbeta[:, lamlist["left"]] * np.tile(
                     np.transpose(lamlist["frac"]), [kbeta.shape[0], 1]
                 ) + kbeta[:, lamlist["right"]] * (
                     1
-                    - scipy.tile(
+                    - np.tile(
                         np.transpose(lamlist["frac"]), [kbeta.shape[0], 1]
                     )
                 )
                 nbeta[i] = kbeta
         else:
             for i in range(nclass):
-                nbeta[i] = scipy.row_stack((a0[i, :], nbeta[i]))
+                nbeta[i] = np.row_stack((a0[i, :], nbeta[i]))
             nlambda = len(fit["lambdau"])
 
         if ptype == "coefficients":
@@ -251,9 +251,9 @@ def glmnetPredict(
         npred = newx.shape[0]
         dp = np.zeros([nclass, nlambda, npred], dtype=np.float64)
         for i in range(nclass):
-            qq = scipy.column_stack((np.ones([newx.shape[0], 1]), newx))
+            qq = np.column_stack((np.ones([newx.shape[0], 1]), newx))
             fitk = np.dot(qq, nbeta[i])
-            dp[i, :, :] = dp[i, :, :] + scipy.reshape(
+            dp[i, :, :] = dp[i, :, :] + np.reshape(
                 np.transpose(fitk), [1, nlambda, npred]
             )
 
@@ -274,7 +274,7 @@ def glmnetPredict(
             pp = np.exp(dp)
             psum = np.sum(pp, axis=0, keepdims=True)
             result = np.transpose(
-                pp / scipy.tile(psum, [nclass, 1, 1]), [2, 0, 1]
+                pp / np.tile(psum, [nclass, 1, 1]), [2, 0, 1]
             )
         if ptype == "link":
             result = np.transpose(dp, [2, 0, 1])
@@ -283,7 +283,7 @@ def glmnetPredict(
             result = list()
             for i in range(dp.shape[2]):
                 t = softmax(dp[:, :, i])
-                result = scipy.append(result, fit["label"][t["pclass"]])
+                result = np.append(result, fit["label"][t["pclass"]])
 
     # coxnet
     if fit["class"] == "coxnet":
@@ -291,11 +291,11 @@ def glmnetPredict(
         if len(s) > 0:
             lambdau = fit["lambdau"]
             lamlist = lambda_interp(lambdau, s)
-            nbeta = nbeta[:, lamlist["left"]] * scipy.tile(
+            nbeta = nbeta[:, lamlist["left"]] * np.tile(
                 np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
             ) + nbeta[:, lamlist["right"]] * (
                 1
-                - scipy.tile(
+                - np.tile(
                     np.transpose(lamlist["frac"]), [nbeta.shape[0], 1]
                 )
             )
@@ -316,7 +316,7 @@ def glmnetPredict(
                     "No offset provided for prediction, yet used in fit of glmnet"
                 )
 
-            result = result + scipy.tile(offset, [1, result.shape[1]])
+            result = result + np.tile(offset, [1, result.shape[1]])
 
         if ptype == "response":
             result = np.exp(result)
@@ -343,15 +343,15 @@ def lambda_interp(lambdau, s):
         left = np.zeros([nums, 1], dtype=np.integer)
         right = left
         sfrac = np.zeros([nums, 1], dtype=np.float64)
-    else:
-        s[s > scipy.amax(lambdau)] = scipy.amax(lambdau)
-        s[s < scipy.amin(lambdau)] = scipy.amin(lambdau)
+    else:        
+        s[s > np.amax(lambdau)] = np.amax(lambdau)
+        s[s < np.amin(lambdau)] = np.amin(lambdau)
         k = len(lambdau)
         sfrac = (lambdau[0] - s) / (lambdau[0] - lambdau[k - 1])
         lambdau = (lambdau[0] - lambdau) / (lambdau[0] - lambdau[k - 1])
         coord = scipy.interpolate.interp1d(lambdau, range(k))(sfrac)
-        left = scipy.floor(coord).astype(np.integer, copy=False)
-        right = scipy.ceil(coord).astype(np.integer, copy=False)
+        left = np.floor(coord).astype(np.integer, copy=False)
+        right = np.ceil(coord).astype(np.integer, copy=False)
         #
         tf = left != right
         sfrac[tf] = (sfrac[tf] - lambdau[right[tf]]) / (
