@@ -35,7 +35,7 @@ def cvmrelnet(
     if len(offset) > 0:
         y = y - offset
 
-    predmat = np.ones([nobs, nc, lambdau.size]) * np.NAN
+    predmat = np.ones([nobs, nc, lambdau.size]) * np.nan
     nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
@@ -47,7 +47,7 @@ def cvmrelnet(
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
-    nlams = np.asarray(nlams, dtype=np.integer)
+    nlams = np.asarray(nlams, dtype=np.int64)
 
     N = nobs - np.reshape(
         np.sum(np.isnan(predmat[:, 1, :]), axis=0), (1, -1)

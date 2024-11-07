@@ -78,7 +78,7 @@ def lognet(
             weights = weights[t]
             nobs = np.sum(t)
         else:
-            t = np.empty([0], dtype=np.integer)
+            t = np.empty([0], dtype=np.int64)
         #
         if len(y.shape) == 1:
             mv = len(y)
@@ -291,7 +291,7 @@ def lognet(
     if family == "multinomial":
         a0 = a0 - np.tile(np.mean(a0), (nc, 1))
         dfmat = a0.copy()
-        dd = np.asarray([nvars, lmu], dtype=np.integer)
+        dd = np.asarray([nvars, lmu], dtype=np.int64)
         beta_list = list()
         if ninmax > 0:
             # TODO: is the reshape here done right?
@@ -338,7 +338,7 @@ def lognet(
         fit["offset"] = is_offset
         fit["class"] = "multnet"
     else:
-        dd = np.asarray([nvars, lmu], dtype=np.integer)
+        dd = np.asarray([nvars, lmu], dtype=np.int64)
         if ninmax > 0:
             ca = ca[0:ninmax, :]
             df = np.sum(np.abs(ca) > 0, axis=0)

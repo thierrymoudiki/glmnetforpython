@@ -218,7 +218,7 @@ def mrelnet(
     # create return fit dictionary
     if nr > 1:
         dfmat = a0.copy()
-        dd = np.asarray([nvars, lmu], dtype=np.integer)
+        dd = np.asarray([nvars, lmu], dtype=np.int64)
         beta_list = list()
         if ninmax > 0:
             # TODO: is the reshape here done right?
@@ -248,7 +248,7 @@ def mrelnet(
         fit["beta"] = beta_list
         fit["dfmat"] = dfmat
     else:
-        dd = np.asarray([nvars, lmu], dtype=np.integer)
+        dd = np.asarray([nvars, lmu], dtype=np.int64)
         if ninmax > 0:
             ca = ca[0:ninmax, :]
             df = np.sum(np.abs(ca) > 0, axis=0)

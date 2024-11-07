@@ -35,7 +35,7 @@ def cvfishnet(
     else:
         is_offset = False
 
-    predmat = np.ones([y.size, lambdau.size]) * np.NAN
+    predmat = np.ones([y.size, lambdau.size]) * np.nan
     nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
@@ -50,7 +50,7 @@ def cvfishnet(
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
-    nlams = np.asarray(nlams, dtype=np.integer)
+    nlams = np.asarray(nlams, dtype=np.int64)
 
     N = y.shape[0] - np.sum(np.isnan(predmat), axis=0)
     yy = np.tile(y, [1, lambdau.size])

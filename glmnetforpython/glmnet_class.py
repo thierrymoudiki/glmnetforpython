@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import warnings
+
+from collections import namedtuple
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
 from .glmnet import glmnet
 from .glmnetPlot import glmnetPlot
@@ -97,6 +100,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         self.ncores = ncores
         self.verbose = verbose
         self.model = None
+        self.s = None
         self.coef_ = None
 
     def fit(self, X, y, s=None, exact=False, **kwargs):
@@ -146,6 +150,29 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         )
         self.coef_ = glmnetCoef(self.model, s=s, exact=exact, **kwargs)
         return self
+
+    def cvglmnet(self, X, y, family="gaussian",
+                 ptype="default",
+                 nfolds=10,
+                 foldid=np.empty([0]),
+                 parallel=1,
+                 keep=False,
+                 grouped=True,
+                 **kwargs):
+        warnings.filterwarnings('ignore')
+        cvfit = cvglmnet(x = X, y = y, family = family,
+                         ptype = ptype, nfolds = nfolds, foldid = foldid,
+                         parallel = parallel, keep = keep, grouped = grouped, **kwargs)
+        
+        warnings.filterwarnings('default')
+        best_lambda = cvfit["lambda_min"][0]
+        best_coef = cvglmnetCoef(cvfit, s = best_lambda).ravel()
+        DescribeResult = namedtuple("DescribeResult", ["cvfit", "best_lambda", "best_coef"])
+        glmnet_obj = GLMNet()
+        glmnet_obj.model = cvfit
+        glmnet_obj.coef_ = best_coef
+        return DescribeResult(glmnet_obj, best_lambda, best_coef)
+
     
     def get_coef(self, s=None, exact=False):
         """
@@ -190,7 +217,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         assert xvar in ("norm", "lambda", "dev"), "Invalid input for xvar."
         return glmnetPlot(self.model, xvar=xvar, label=label)
 
-    def predict(self, X, ptype="response", s=np.asarray([0.1, 0.5]), exact=False, **kwargs):
+    def predict(self, X, ptype="response", s=None, exact=False, **kwargs):
         """
         Predict the response variable.
 
@@ -211,12 +238,20 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         **kwargs : dict
             Additional arguments            
         """        
+        if self.s is None:
+            self.s = 0.1
+        else:
+            self.s = s
         assert ptype in ("response", "coefficients", "nonzero"),\
               "Invalid input for ptype."
-        if np.isscalar(s):
-            res = glmnetPredict(self.model, X, ptype=ptype, s=np.asarray([s, 0.1]), exact=exact, **kwargs)
+        if np.isscalar(self.s):
+            res = glmnetPredict(self.model, X, ptype=ptype, 
+                                s=np.asarray([self.s, 0.1]), 
+                                exact=exact, **kwargs)
             return res[:, 0]
-        return glmnetPredict(self.model, X, ptype=ptype, s=s, exact=exact, **kwargs)
+        return glmnetPredict(self.model, X, 
+                             ptype=ptype, s=self.s, 
+                             exact=exact, **kwargs)
         
 
     def predict_proba(self, X):

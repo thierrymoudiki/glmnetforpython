@@ -220,8 +220,7 @@ def nonzeroCoef(beta, bystep=False):
 
 # end of nonzeroCoef()
 # =========================================
-def plotCoef(beta, norm, lambdau, df, dev, label, xvar, xlab, ylab, **options):
-    import matplotlib.pyplot as plt
+def plotCoef(beta, norm, lambdau, df, dev, label, xvar, xlab, ylab, **options):    
 
     which = nonzeroCoef(beta)
     idwhich = [i for i in range(len(which)) if which[i] == True]
@@ -266,7 +265,7 @@ def plotCoef(beta, norm, lambdau, df, dev, label, xvar, xlab, ylab, **options):
     ylim1 = ax1.get_ylim()
 
     atdf = ax1.get_xticks()
-    indat = np.ones(atdf.shape, dtype=np.integer)
+    indat = np.ones(atdf.shape, dtype=np.int64)
     if index[-1] >= index[1]:
         for j in range(len(index) - 1, -1, -1):
             indat[atdf <= index[j]] = j

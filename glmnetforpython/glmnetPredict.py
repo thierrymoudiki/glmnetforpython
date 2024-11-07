@@ -153,7 +153,7 @@ def glmnetPredict(
             a0 = np.transpose(fit["a0"])
 
         a0 = np.reshape(a0, [1, a0.size])  # convert to 1 x N for appending
-        nbeta = np.row_stack((a0, fit["beta"]))
+        nbeta = np.vstack((a0, fit["beta"]))
         if np.size(s) > 0:
             lambdau = fit["lambdau"]
             lamlist = lambda_interp(lambdau, s)
@@ -217,7 +217,7 @@ def glmnetPredict(
             lambdau = fit["lambdau"]
             lamlist = lambda_interp(lambdau, s)
             for i in range(nclass):
-                kbeta = np.row_stack((a0[i, :], nbeta[i]))
+                kbeta = np.vstack((a0[i, :], nbeta[i]))
                 kbeta = kbeta[:, lamlist["left"]] * np.tile(
                     np.transpose(lamlist["frac"]), [kbeta.shape[0], 1]
                 ) + kbeta[:, lamlist["right"]] * (
@@ -229,7 +229,7 @@ def glmnetPredict(
                 nbeta[i] = kbeta
         else:
             for i in range(nclass):
-                nbeta[i] = np.row_stack((a0[i, :], nbeta[i]))
+                nbeta[i] = np.vstack((a0[i, :], nbeta[i]))
             nlambda = len(fit["lambdau"])
 
         if ptype == "coefficients":
@@ -340,7 +340,7 @@ def lambda_interp(lambdau, s):
     # sfrac*left+(1-sfrac*right)
     if len(lambdau) == 1:
         nums = len(s)
-        left = np.zeros([nums, 1], dtype=np.integer)
+        left = np.zeros([nums, 1], dtype=np.int64)
         right = left
         sfrac = np.zeros([nums, 1], dtype=np.float64)
     else:        
@@ -350,8 +350,8 @@ def lambda_interp(lambdau, s):
         sfrac = (lambdau[0] - s) / (lambdau[0] - lambdau[k - 1])
         lambdau = (lambdau[0] - lambdau) / (lambdau[0] - lambdau[k - 1])
         coord = scipy.interpolate.interp1d(lambdau, range(k))(sfrac)
-        left = np.floor(coord).astype(np.integer, copy=False)
-        right = np.ceil(coord).astype(np.integer, copy=False)
+        left = np.floor(coord).astype(np.int64, copy=False)
+        right = np.ceil(coord).astype(np.int64, copy=False)
         #
         tf = left != right
         sfrac[tf] = (sfrac[tf] - lambdau[right[tf]]) / (
@@ -376,7 +376,7 @@ def lambda_interp(lambdau, s):
 def softmax(x, gap=False):
     d = x.shape
     maxdist = x[:, 0]
-    pclass = np.zeros([d[0], 1], dtype=np.integer)
+    pclass = np.zeros([d[0], 1], dtype=np.int64)
     for i in range(1, d[1], 1):
         l = x[:, i] > maxdist
         pclass[l] = i

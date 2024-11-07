@@ -69,13 +69,14 @@
     
 """
 
+import numpy as np
 import scipy
 from .glmnetCoef import glmnetCoef
 
 
 def cvglmnetCoef(obj, s=None):
 
-    if s is None or len(s) == 0:
+    if s is None or np.isscalar(s):
         s = obj["lambda_1se"]
 
     if isinstance(s, np.ndarray):

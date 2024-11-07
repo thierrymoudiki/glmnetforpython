@@ -62,7 +62,7 @@ def cvlognet(
         grouped = False
 
     is_offset = not (len(offset) == 0)
-    predmat = np.ones([y.shape[0], lambdau.size]) * np.NAN
+    predmat = np.ones([y.shape[0], lambdau.size]) * np.nan
     nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
@@ -79,10 +79,10 @@ def cvlognet(
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
-    nlams = np.asarray(nlams, dtype=np.integer)
+    nlams = np.asarray(nlams, dtype=np.int64)
 
     if ptype == "auc":
-        cvraw = np.zeros([nfolds, lambdau.size]) * np.NaN
+        cvraw = np.zeros([nfolds, lambdau.size]) * np.nan
         good = np.zeros([nfolds, lambdau.size])
         for i in range(nfolds):
             good[i, 0 : nlams[i]] = 1

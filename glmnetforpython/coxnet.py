@@ -197,7 +197,7 @@ def coxnet(
     fit["lambdau"] = alm
     fit["npasses"] = nlp_r.value
     fit["jerr"] = jerr_r.value
-    fit["dim"] = np.asarray([nvars, lmu], dtype=np.integer)
+    fit["dim"] = np.asarray([nvars, lmu], dtype=np.int64)
     fit["offset"] = is_offset
     fit["class"] = "coxnet"
 

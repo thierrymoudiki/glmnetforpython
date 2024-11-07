@@ -202,7 +202,7 @@ def glmnetSet(opts=None):
         "thresh": np.float64(1e-7),
         "dfmax": np.empty([0]),
         "pmax": np.empty([0]),
-        "exclude": np.empty([0], dtype=np.integer),
+        "exclude": np.empty([0], dtype=np.int64),
         "penalty_factor": np.empty([0]),
         "cl": np.asarray(
             [[np.float64(-np.inf)], [np.float64(np.inf)]]
@@ -225,10 +225,11 @@ def glmnetSet(opts=None):
     if (
         len(optsInOptions) > 0
     ):  # assert 'opts' keys are subsets of 'options' keys
-        print(optsInOptions, " : unknown option for glmnetSet")
+        #print(optsInOptions, " : unknown option for glmnetSet")
         #raise ValueError(
         #    "attempting to set glmnet options that are not known to glmnetSet"
         #)
+        pass 
     else:
         options = merge_dicts(options, opts)
 

@@ -111,7 +111,7 @@ def cvglmnetPlot(cvobject, sign_lambda=1.0, **options):
     ax2.xaxis.tick_top()
 
     atdf = ax1.get_xticks()
-    indat = np.ones(atdf.shape, dtype=np.integer)
+    indat = np.ones(atdf.shape, dtype=np.int64)
     if sloglam[-1] >= sloglam[1]:
         for j in range(len(sloglam) - 1, -1, -1):
             indat[atdf <= sloglam[j]] = j

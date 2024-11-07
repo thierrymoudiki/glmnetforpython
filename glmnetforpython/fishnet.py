@@ -207,7 +207,7 @@ def fishnet(
         t2 = np.log(alm[2])
         alm[0] = np.exp(2 * t1 - t2)
     # create return fit dictionary
-    dd = np.asarray([nvars, lmu], dtype=np.integer)
+    dd = np.asarray([nvars, lmu], dtype=np.int64)
     if ninmax > 0:
         ca = ca[0:ninmax, :]
         df = np.sum(np.abs(ca) > 0, axis=0)

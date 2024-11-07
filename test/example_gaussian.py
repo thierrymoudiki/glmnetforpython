@@ -39,7 +39,7 @@ y = np.loadtxt(baseDataDir + 'QuickStartExampleY.dat', dtype = np.float64)
 
 # create weights
 t = np.ones((50, 1), dtype = np.float64)
-wts = np.row_stack((t, 2*t))
+wts = np.vstack((t, 2*t))
 
 # call glmnet
 fit = glmnet.glmnet(x = x.copy(), y = y.copy(), family = 'gaussian', \

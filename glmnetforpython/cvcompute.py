@@ -4,6 +4,7 @@ Internal glmnet function. See also cvglmnet.
 
 Compute the weighted mean and SD within folds, and hence the SE of the mean
 """
+import numpy as np
 import scipy
 from .wtmean import wtmean
 
@@ -18,9 +19,9 @@ def cvcompute(mat, weights, foldid, nlams):
         )
     wisum = np.bincount(foldid, weights=weights)
     nfolds = np.amax(foldid) + 1
-    outmat = np.ones([nfolds, mat.shape[1]]) * np.NaN
+    outmat = np.ones([nfolds, mat.shape[1]]) * np.nan
     good = np.zeros([nfolds, mat.shape[1]])
-    mat[np.isinf(mat)] = np.NaN
+    mat[np.isinf(mat)] = np.nan
     for i in range(nfolds):
         tf = foldid == i
         mati = mat[tf,]

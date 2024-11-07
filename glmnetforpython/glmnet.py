@@ -360,7 +360,7 @@ def glmnet(*, x, y, family="gaussian", **options):
                 len(exclude), exclude + 1
             )  # indices are 1-based in fortran
     else:
-        jd = np.zeros([1, 1], dtype=np.integer)
+        jd = np.zeros([1, 1], dtype=np.int64)
 
     # check vp
     vp = options["penalty_factor"]

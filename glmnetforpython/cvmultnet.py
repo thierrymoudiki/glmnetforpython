@@ -44,7 +44,7 @@ def cvmultnet(
         nc = nc[1]
 
     is_offset = not (len(offset) == 0)
-    predmat = np.ones([y.shape[0], nc, lambdau.size]) * np.NAN
+    predmat = np.ones([y.shape[0], nc, lambdau.size]) * np.nan
     nfolds = np.amax(foldid) + 1
     nlams = []
     for i in range(nfolds):
@@ -61,7 +61,7 @@ def cvmultnet(
         predmat[which, 0:nlami] = preds
         nlams.append(nlami)
     # convert nlams to scipy array
-    nlams = np.asarray(nlams, dtype=np.integer)
+    nlams = np.asarray(nlams, dtype=np.int64)
 
     ywt = np.sum(y, axis=1, keepdims=True)
     y = y / np.tile(ywt, [1, y.shape[1]])
@@ -82,7 +82,7 @@ def cvmultnet(
     elif ptype == "mae":
         cvraw = np.sum(np.abs(bigY - predmat), axis=1).squeeze()
     elif ptype == "class":
-        classid = np.zeros([y.shape[0], lambdau.size]) * np.NaN
+        classid = np.zeros([y.shape[0], lambdau.size]) * np.nan
         for i in range(lambdau.size):
             classid[:, i] = glmnet_softmax(predmat[:, :, i])
         classid = classid.reshape([classid.size, 1])
@@ -127,7 +127,7 @@ def glmnet_softmax(x):
     d = x.shape
     nas = np.any(np.isnan(x), axis=1)
     if np.any(nas):
-        pclass = np.zeros([d[0], 1]) * np.NaN
+        pclass = np.zeros([d[0], 1]) * np.nan
         if np.sum(nas) < d[0]:
             pclass2 = glmnet_softmax(x[~nas, :])
             pclass[~nas] = pclass2

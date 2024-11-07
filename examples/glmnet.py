@@ -11,7 +11,7 @@ datasets = [load_diabetes, fetch_california_housing]
 
 for dataset in datasets:
 
-    print(f"dataset: {dataset.__name__}")
+    print(f"\n\n dataset: {dataset.__name__} -------------------")
 
     X, y = dataset(return_X_y=True)
 
@@ -25,8 +25,6 @@ for dataset in datasets:
     regr.fit(X_train, y_train)
     print(f"elapsed: {time() - start}")
 
-    print(regr.get_coef())
-
     regr.print()
 
     print(regr.predict(X_test, s=0.1))
@@ -34,3 +32,11 @@ for dataset in datasets:
     print(regr.predict(X_test, s=np.asarray([0.1, 0.5])))
 
     print(regr.predict(X_test, s=0.5))
+
+    start = time()
+    res_cvglmnet = regr.cvglmnet(X_train, y_train)
+    print(f"elapsed: {time() - start}")
+
+    print("\n best lambda: ", res_cvglmnet.best_lambda)
+    print("\n best coef: ", res_cvglmnet.best_coef)
+    print("\n best GLMNet: ", res_cvglmnet.cvfit)
