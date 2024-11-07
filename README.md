@@ -19,7 +19,7 @@ pip install git+github.com/thierrymouidiki/glmnetforpython.git
     
 ## What?
 
-This is a python version of the popular `glmnet` library (beta release). Glmnet fits the entire lasso or elastic-net regularization path for `linear` regression, `logistic` and `multinomial` regression models, `poisson` regression and the `cox` model. 
+This is a python version of the popular `glmnet` library (scikit-learn style). Glmnet fits the entire lasso or elastic-net regularization path for `linear` regression, `logistic` and `multinomial` regression models, `poisson` regression and the `cox` model. 
 
 The underlying fortran codes are the same as the `R` version, and uses a cyclical path-wise coordinate descent algorithm as described in the papers linked below. 
 
