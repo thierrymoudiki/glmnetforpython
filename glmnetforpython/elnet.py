@@ -40,8 +40,12 @@ def elnet(
     # load shared fortran library
     glmlib = loadGlmLib()
 
-    # pre-process data
+    y = y.ravel()
+    weights = weights.ravel()    
+
+    # pre-process data    
     ybar = np.dot(np.transpose(y), weights)
+    ybar = np.float64(ybar)
     ybar = ybar / sum(weights)
     nulldev = (y - ybar) ** 2 * weights
     # ka

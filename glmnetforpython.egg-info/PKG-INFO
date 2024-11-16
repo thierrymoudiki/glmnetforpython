@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: glmnetforpython
+Version: 0.3.1
+Summary: Python version of glmnet, adapted from Stanford University (scikit-learn style)
+Home-page: https://github.com/thierrymoudiki/glmnetforpython
+Author: T. Moudiki
+Author-email: thierry.moudiki@gmail.com
+License: GPL-2
+Keywords: glm glmnet ridge lasso elasticnet
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Operating System :: Unix
+License-File: LICENSE
+Requires-Dist: joblib
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: scikit-learn
+
+T. Moudik's Python version of glmnet (scikit-learn style)
