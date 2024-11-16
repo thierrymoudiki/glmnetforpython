@@ -43,7 +43,8 @@ def elnet(
     #y = y.ravel()
     weights = weights.ravel()    
 
-    # pre-process data    
+    # pre-process data  
+    y = y.ravel()  
     ybar = np.average(y, weights=weights)
     nulldev = (y - ybar) ** 2 * weights
     # ka
