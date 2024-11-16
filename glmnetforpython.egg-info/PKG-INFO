@@ -17,6 +17,7 @@ Classifier: Operating System :: Unix
 License-File: LICENSE
 Requires-Dist: joblib
 Requires-Dist: matplotlib
+Requires-Dist: nnetsauce
 Requires-Dist: numpy
 Requires-Dist: scipy
 Requires-Dist: scikit-learn
