@@ -16,13 +16,23 @@ for dataset in datasets:
 
     X, y = dataset(return_X_y=True)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
     regr = glmnetpy.GLMNet()
 
     print(regr.get_params())
 
     clf = ns.MultitaskClassifier(regr)
+
+    start = time()
+    clf.fit(X_train, y_train)
+    print(f"elapsed: {time() - start}")
+
+    regr.print()
+
+    print(clf.score(X_test, y_test))
+
+    clf = ns.SimpleMultitaskClassifier(regr)
 
     start = time()
     clf.fit(X_train, y_train)
