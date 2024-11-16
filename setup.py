@@ -13,7 +13,7 @@ cmd = 'gfortran ./glmnetforpython/GLMnet.f -fPIC -fdefault-real-8 -shared -o ./g
 os.system(cmd)
 
 setup(name='glmnetforpython',
-      version = '0.3.1',
+      version = '0.3.2',
       description = 'Python version of glmnet, adapted from Stanford University (scikit-learn style)',
       long_description="T. Moudik's Python version of glmnet (scikit-learn style)",
       url="https://github.com/thierrymoudiki/glmnetforpython",
