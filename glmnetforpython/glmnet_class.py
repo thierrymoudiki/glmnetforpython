@@ -126,7 +126,6 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         self : object
             Returns the instance itself.
         """
-        print("in GLMNet L.129 y", y)
         self.model = glmnet(
             x=X,
             y=y,
@@ -254,7 +253,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         **kwargs : dict
             Additional arguments
         """
-        if self.s is None:
+        if s is None or self.s is None:
             self.s = 0.1
         else:
             self.s = s
