@@ -126,6 +126,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         self : object
             Returns the instance itself.
         """
+        print("in GLMNet L.129 y", y)
         self.model = glmnet(
             x=X,
             y=y,
@@ -262,7 +263,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
             "coefficients",
             "nonzero",
         ), "Invalid input for ptype."
-        if np.isscalar(self.s):
+        if np.isscalar(self.s) or len(self.s) == 1:
             res = glmnetPredict(
                 self.model,
                 X,
