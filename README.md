@@ -27,13 +27,12 @@ Currently, `glmnet` library methods for gaussian, multi-variate gaussian, binomi
 
 Additionally, cross-validation is also implemented for gaussian, multivariate gaussian, binomial, multinomial and poisson models. CV for cox models is yet to be implemented. 
 
-CV can be done in both serial and parallel manner. Parallellization is done using `multiprocessing` and `joblib` libraries.
-
-During installation, the fortran code is compiled in the local machine using `gfortran`, and is called by the python code.
-
 ## Usage
 
-See [examples](./examples/glmnet.py)
+See:
+
+- [regression examples](./examples/glmnet_regression.py)
+- [classification examples](./examples/glmnet_classification.py)
 
 ## References:
 

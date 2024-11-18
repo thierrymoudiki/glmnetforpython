@@ -19,14 +19,19 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
     """
     A sklearn-style wrapper for the glmnet package.
 
+    More details about GLMNet can be found at:
+
+    https://glmnet.stanford.edu/articles/glmnet.html
+
     Parameters
     ----------
     alpha : float, optional
         The alpha parameter in the elastic net penalty. Default is 1.0.
+        0.0 is the ridge penalty and 1.0 is the lasso penalty.
     nlambda : int, optional
-        The number of lambda values to use. Default is 100.
+        The number of lambda values to compute. Default is 100.
     lambdau : float, optional
-        The user-defined lambda value. Default is None.
+        User-defined lambda value. Default is None.
     standardize : bool, optional
         Whether to standardize the predictors. Default is True.
     thresh : float, optional
@@ -49,15 +54,13 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         The type of measure to use. Default is 1.
     family : str, optional
         The family of the response variable. Default is 'gaussian'.
+        Other options are 'binomial', 'multinomial', 'poisson', 'cox' and 'mgaussian'.
     parallel : bool, optional
         Whether to use parallel processing. Default is False.
     ncores : int, optional
         The number of cores to use. Default is -1.
     verbose : bool, optional
         Whether to print messages. Default is False.
-
-    See also
-
     """
 
     def __init__(
@@ -180,14 +183,19 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
 
         warnings.filterwarnings("default")
         best_lambda = cvfit["lambda_min"][0]
+        best_lambda_1se = cvfit["lambda_1se"][0]
         best_coef = cvglmnetCoef(cvfit, s=best_lambda).ravel()
         DescribeResult = namedtuple(
-            "DescribeResult", ["cvfit", "best_lambda", "best_coef"]
+            "DescribeResult", ["model", "cvfit", 
+                               "lambda_min", "lambda_1se", 
+                               "best_coef"]
         )
         glmnet_obj = GLMNet()
         glmnet_obj.model = cvfit
         glmnet_obj.coef_ = best_coef
-        return DescribeResult(glmnet_obj, best_lambda, best_coef)
+        return DescribeResult(glmnet_obj, cvfit, 
+                              best_lambda, best_lambda_1se, 
+                              best_coef)
 
     def get_coef(self, s=None, exact=False):
         """
@@ -243,6 +251,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         ptype : str
             The type of prediction to make.
             "response" the sames as "link" for "gaussian" family.
+            "class" returns the class label.
             "coefficients" computes the coefficients at values of s
             "nonzero" retuns a list of the indices of the nonzero coefficients for each value of s.
             Default is "response".
@@ -260,6 +269,7 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
         assert ptype in (
             "response",
             "coefficients",
+            "class",
             "nonzero",
         ), "Invalid input for ptype."
         if np.isscalar(self.s) or len(self.s) == 1:
@@ -271,7 +281,12 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
                 exact=exact,
                 **kwargs
             )
-            return res[:, 0]
+            try:
+                return res[:, 0]
+            except IndexError:
+                return res[range(X.shape[0])]
+            except ValueError: 
+                return res
         return glmnetPredict(
             self.model, X, ptype=ptype, s=self.s, exact=exact, **kwargs
         )
@@ -281,3 +296,6 @@ class GLMNet(BaseEstimator, RegressorMixin, ClassifierMixin):
 
     def predict_log_proba(self, X):
         return self.model.predict_log_proba(X)
+    
+    def score(self, X, y):
+        return self.model.score(X, y)

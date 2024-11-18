@@ -37,6 +37,7 @@ for dataset in datasets:
     res_cvglmnet = regr.cvglmnet(X_train, y_train)
     print(f"elapsed: {time() - start}")
 
-    print("\n best lambda: ", res_cvglmnet.best_lambda)
+    print("\n best lambda: ", res_cvglmnet.lambda_min)
+    print("\n best lambda std. dev: ", res_cvglmnet.lambda_1se)
     print("\n best coef: ", res_cvglmnet.best_coef)
     print("\n best GLMNet: ", res_cvglmnet.cvfit)

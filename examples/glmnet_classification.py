@@ -1,8 +1,6 @@
 import nnetsauce as ns
 import mlsauce as ms
 import numpy as np
-import os
-import sys
 import glmnetforpython as glmnetpy
 from sklearn.datasets import load_breast_cancer, load_iris, load_wine
 from sklearn.model_selection import train_test_split
@@ -19,36 +17,18 @@ for dataset in datasets:
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-    regr = glmnetpy.GLMNet(family="mgaussian")
+    clf = glmnetpy.GLMNet(family="multinomial")
 
-    print(regr.get_params())
-
-    #clf = ns.MultitaskClassifier(regr)
-
-    #start = time()
-    #clf.fit(X_train, y_train)
-    #print(f"elapsed: {time() - start}")
-
-    #regr.print()
-
-    #print(clf.score(X_test, y_test))
-
-    #clf = ns.SimpleMultitaskClassifier(regr)
-
-    #start = time()
-    #clf.fit(X_train, y_train)
-    #print(f"elapsed: {time() - start}")
-
-    #regr.print()
-
-    #print(clf.score(X_test, y_test))
-
-    clf = ms.GenericBoostingClassifier(regr)
+    print(clf.get_params())
 
     start = time()
     clf.fit(X_train, y_train)
     print(f"elapsed: {time() - start}")
 
-    regr.print()
+    #clf.print()
+    #print(clf.score(X_test, y_test))
+    preds = clf.predict(X_test, ptype="class")
+    print(preds)
 
-    print(clf.score(X_test, y_test))
+    print("accuracy: ", np.mean(preds == y_test))
+
