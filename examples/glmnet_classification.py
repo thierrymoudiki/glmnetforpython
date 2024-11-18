@@ -1,7 +1,7 @@
 import nnetsauce as ns
 import mlsauce as ms
 import numpy as np
-import glmnetforpython as glmnetpy
+import glmnetforpython as glmnet
 from sklearn.datasets import load_breast_cancer, load_iris, load_wine
 from sklearn.model_selection import train_test_split
 from time import time
@@ -17,7 +17,7 @@ for dataset in datasets:
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
 
-    clf = glmnetpy.GLMNet(family="multinomial")
+    clf = glmnet.GLMNet(family="multinomial")
 
     print(clf.get_params())
 

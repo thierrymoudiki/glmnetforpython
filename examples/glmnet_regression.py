@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import sys
-import glmnetforpython as glmnetpy
+import glmnetforpython as glmnet
 from sklearn.datasets import load_diabetes, fetch_california_housing
 from sklearn.model_selection import train_test_split
 from time import time
@@ -17,7 +17,7 @@ for dataset in datasets:
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    regr = glmnetpy.GLMNet()
+    regr = glmnet.GLMNet()
 
     print(regr.get_params())
 
